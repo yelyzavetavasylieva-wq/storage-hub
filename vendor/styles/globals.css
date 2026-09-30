@@ -1,0 +1,447 @@
+@import "tailwindcss";
+
+/* Force Tailwind to output CSS variables for every shade of every custom color
+   family. Without this, Tailwind only emits variables for shades it finds
+   referenced as utility classes in scanned source files. */
+@source inline("bg-{brand,error,warning,success}-{25,50,100,200,300,400,500,600,700,800,900}");
+@source inline("bg-gray-{25,950}");
+
+@theme {
+  /* ─── Font family ──────────────────────────────────────────── */
+  /* Self-hosting 'Inter Variable' was tried and reverted — no visible improvement over the
+     native OS font chain to justify the added bundle weight. */
+  --font-sans: 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system,
+    BlinkMacSystemFont, sans-serif;
+
+  /* ─── Font weights ─────────────────────────────────────────── */
+  --font-weight-regular:  400;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  /* ─── Type scale ───────────────────────────────────────────────────────────
+     Tailwind v4's font-size namespace is `--text-*` 
+  */
+  --text-display-2xl: 4.5rem;    /* 72px */
+  --text-display-xl:  3.75rem;   /* 60px */
+  --text-display-lg:  3rem;      /* 48px */
+  --text-display-md:  2.25rem;   /* 36px */
+  --text-display-sm:  1.875rem;  /* 30px */
+  --text-display-xs:  1.5rem;    /* 24px */
+  --text-text-xl:     1.25rem;   /* 20px */
+  --text-text-lg:     1.125rem;  /* 18px */
+  --text-text-md:     1rem;      /* 16px */
+  --text-text-sm:     0.875rem;  /* 14px */
+  --text-text-xs:     0.75rem;   /* 12px */
+
+  /* Paired line-heights — Tailwind v4 modifier syntax: text-display-2xl applies both */
+  --text-display-2xl--line-height: 5.625rem; /* 90px */
+  --text-display-xl--line-height:  4.5rem;   /* 72px */
+  --text-display-lg--line-height:  3.75rem;  /* 60px */
+  --text-display-md--line-height:  2.75rem;  /* 44px */
+  --text-display-sm--line-height:  2.375rem; /* 38px */
+  --text-display-xs--line-height:  2rem;     /* 32px */
+  --text-text-xl--line-height:     1.875rem; /* 30px */
+  --text-text-lg--line-height:     1.75rem;  /* 28px */
+  --text-text-md--line-height:     1.5rem;   /* 24px */
+  --text-text-sm--line-height:     1.25rem;  /* 20px */
+  --text-text-xs--line-height:     1.125rem; /* 18px */
+
+  /* ─── Shadows ──────────────────────────────────────────────── */
+  --shadow-xs: 0 1px 2px 0 rgb(16 24 40 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(16 24 40 / 0.10), 0 1px 2px -1px rgb(16 24 40 / 0.10);
+  --shadow-lg: 0 4px 6px -2px rgb(16 24 40 / 0.03), 0 12px 16px -4px rgb(16 24 40 / 0.08);
+  --shadow-xl: 0 8px 8px -4px rgb(16 24 40 / 0.03), 0 20px 24px -4px rgb(16 24 40 / 0.08);
+  /* Right-anchored side sheet: shadow-xl cast leftward so it reads at the panel's left edge (a
+     downward shadow is invisible on a full-height drawer). */
+  --shadow-drawer: -8px 0 8px -4px rgb(16 24 40 / 0.03), -20px 0 24px -4px rgb(16 24 40 / 0.08);
+  --shadow-row-divider: inset 0 -1px 0 var(--color-border-secondary);
+
+  /* Focus rings — Figma "Shadows and blurs" effects. */
+  --shadow-ring-brand: 0 0 0 4px color-mix(in srgb, var(--color-brand-500) 24%, transparent);
+  --shadow-ring-error: 0 0 0 4px color-mix(in srgb, var(--color-error-500) 24%, transparent), 0 1px 2px 0 rgb(16 24 40 / 0.05);
+  /* NavItem's focus halo — literal rgba, since no gray-* step here matches Figma's source #98A2B3. */
+  --shadow-ring-gray: 0 0 0 4px rgba(152, 162, 179, 0.14);
+  /* Same brand blue as --shadow-ring-brand, drawn inward instead of as an outward halo — for
+     controls with zero surrounding space (Pagination's cells fill their row edge-to-edge), an
+     outward halo gets clipped by the row's own overflow-hidden on the cramped axis and vanishes;
+     inset never needs room outside the element's own box, so it survives that clip intact. 2px is
+     the WCAG 2.4.11 floor — a table row or grid tile is a much larger, denser surface than
+     Pagination's small cells, where 3px read as too heavy against the row's own content. */
+  --shadow-ring-brand-inset: inset 0 0 0 2px var(--color-brand-500);
+  /* TextField's own double border (border-brand + ring-brand), drawn inward and thinner: a table
+     row/grid tile sits edge-to-edge against its neighbors with no surrounding gap, so an outward
+     halo would paint over the next one's background/hairline separator. The solid line reuses
+     border-brand's light brand-300 (not a saturated brand-500) — that's what keeps TextField's
+     focus edge soft instead of reading as a hard, contrasty line against a selected row's fill. */
+  --shadow-ring-brand-inset-halo:
+    inset 0 0 0 1px var(--color-border-brand),
+    inset 0 0 0 3px color-mix(in srgb, var(--color-brand-500) 24%, transparent);
+
+  /* ─── Primitive colors: Gray ───────────────────────────────── */
+  --color-gray-25:  #FCFCFC;
+  --color-gray-50:  #FAFAFA;
+  --color-gray-100: #F4F4F5;
+  --color-gray-200: #E4E4E7;
+  --color-gray-300: #D1D1D6;
+  --color-gray-400: #A0A0AB;
+  --color-gray-500: #70707B;
+  --color-gray-600: #51525C;
+  --color-gray-700: #3F3F46;
+  --color-gray-800: #26272B;
+  --color-gray-900: #1A1A1E;
+  --color-gray-950: #131316;
+
+  /* ─── Primitive colors: Brand ──────────────────────────────── */
+  --color-brand-25:  #F9FCFF;
+  --color-brand-50:  #EBF3FF;
+  --color-brand-100: #C0DAFF;
+  --color-brand-200: #A1C8FF;
+  --color-brand-300: #76AFFF;
+  --color-brand-400: #5CA0FF;
+  --color-brand-500: #3388FF;
+  --color-brand-600: #2E7CE8;
+  --color-brand-700: #2461B5;
+  --color-brand-800: #1C4B8C;
+  --color-brand-900: #15396B;
+
+  /* ─── Primitive colors: Error ──────────────────────────────── */
+  --color-error-25:  #FFFBFA;
+  --color-error-50:  #FEF3F2;
+  --color-error-100: #FEE4E2;
+  --color-error-200: #FECDCA;
+  --color-error-300: #FDA29B;
+  --color-error-400: #F97066;
+  --color-error-500: #F04438;
+  --color-error-600: #D92D20;
+  --color-error-700: #B42318;
+  --color-error-800: #912018;
+  --color-error-900: #7A271A;
+
+  /* ─── Primitive colors: Warning ────────────────────────────── */
+  --color-warning-25:  #FFFCF5;
+  --color-warning-50:  #FFFAEB;
+  --color-warning-100: #FEF0C7;
+  --color-warning-200: #FEDF89;
+  --color-warning-300: #FEC84B;
+  --color-warning-400: #FDB022;
+  --color-warning-500: #F79009;
+  --color-warning-600: #DC6803;
+  --color-warning-700: #B54708;
+  --color-warning-800: #93370D;
+  --color-warning-900: #7A2E0E;
+
+  /* ─── Primitive colors: Success ────────────────────────────── */
+  --color-success-25:  #F6FEF9;
+  --color-success-50:  #ECFDF3;
+  --color-success-100: #DCFAE6;
+  --color-success-200: #ABEFC6;
+  --color-success-300: #75E0A7;
+  --color-success-400: #47CD89;
+  --color-success-500: #17B26A;
+  --color-success-600: #079455;
+  --color-success-700: #067647;
+  --color-success-800: #085D3A;
+  --color-success-900: #074D31;
+
+  /* ─── Primitive colors: Base ───────────────────────────────── */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* ─── Primitive colors: File-type badge ────────────────────────
+     Single-shade, Figma-exact hues used only by FileTypeIcon's extension badge
+     (file-type-icon.tsx) — not a reusable semantic role like the ramps above, so
+     no :root alias/light-tint family: a badge's color never needs to shift for
+     dark mode the way a background does. Figma's file-icon component set only
+     exposes fills on the node itself (viewer-scope token, no Variables API), so
+     these are read off raw hex, not named design tokens — hence generic hue
+     names rather than an authoritative Untitled UI ramp name. */
+  --color-purple-600:      #7F56D9;
+  --color-blue-600:        #155EEF;
+  --color-slate-600:       #475467;
+  --color-slate-700:       #344054;
+  --color-orange-600:      #E62E05;
+  --color-orange-dark-600: #E04F16;
+  --color-fuchsia-600:     #BA24D5;
+  --color-violet-600:      #6938EF;
+  --color-pink-600:        #DD2590;
+  --color-indigo-600:      #444CE7;
+
+  /* ─── Tile size scale (Figma node 4143:31970) ────────────────────────── */
+  /* Card width/height differ per size, so each axis is its own namespace (self-documenting
+     w-tile-* / h-tile-* names) rather than forced through one --spacing-* entry. The icon is
+     square, so one --spacing-tile-icon-* entry covers both axes via size-tile-icon-*.
+     --text-tile-icon-* is defined as a reference to --spacing-tile-icon-*, not a separate
+     literal: FileIconGrid.tsx's FileTypeIcon font-size must equal Tile.tsx's icon-box size, and
+     these two files already drifted once when that pairing was two hand-typed numbers instead
+     of one token read twice. */
+  --width-tile-md:  121px;   --height-tile-md:  142px;
+  --width-tile-lg:  163px;   --height-tile-lg:  182px;
+  --width-tile-xl:  252px;   --height-tile-xl:  236px;
+
+  --spacing-tile-icon-md: 3rem;    /* 48px */
+  --spacing-tile-icon-lg: 4rem;    /* 64px */
+  --spacing-tile-icon-xl: 7.5rem;  /* 120px */
+  --text-tile-icon-md: var(--spacing-tile-icon-md);
+  --text-tile-icon-lg: var(--spacing-tile-icon-lg);
+  --text-tile-icon-xl: var(--spacing-tile-icon-xl);
+}
+
+/* ── Semantic design tokens ─────────────────────────────────────────────────
+   These are NOT in @theme (which would generate useless utility class names
+   like `text-text-brand-primary`). They live here as plain CSS custom
+   properties — aliases over primitives, zero duplicated hex values.        */
+:root {
+  /* Text */
+  --color-text-primary:            var(--color-gray-900);
+  --color-text-primary-on-brand:   var(--color-white);
+  --color-text-secondary:          var(--color-gray-700);
+  --color-text-secondary-hover:    var(--color-gray-800);
+  --color-text-tertiary:           var(--color-gray-600);
+  --color-text-tertiary-hover:     var(--color-gray-700);
+  --color-text-quaternary:         var(--color-gray-500);
+  --color-text-white:              var(--color-white);
+  --color-text-disabled:           var(--color-gray-400);
+  --color-text-placeholder:        var(--color-gray-500);
+  --color-text-placeholder-subtle: var(--color-gray-300);
+  --color-text-brand-primary:      var(--color-brand-500);
+  --color-text-brand-links:        var(--color-brand-700);
+  --color-text-error-primary:      var(--color-error-600);
+  --color-text-error-hover:        var(--color-error-700);
+  --color-text-warning-primary:    var(--color-warning-600);
+  --color-text-success-primary:    var(--color-success-600);
+  /* "-tertiary" text steps: darker than *-primary, calibrated so each passes WCAG AA 4.5:1
+     against that same family's *-secondary background — *-primary alone does not clear that bar
+     for brand/success/warning/error (see badge.tsx). RULE: any component that pairs a
+     `bg-*-secondary` background with colored (non-neutral) text MUST use `text-*-tertiary`, not
+     `text-*-primary`, or it will silently fail 4.5:1 the same way Badge originally did. */
+  --color-text-brand-tertiary:     var(--color-brand-800);
+  --color-text-success-tertiary:   var(--color-success-700);
+  --color-text-warning-tertiary:   var(--color-warning-700);
+  --color-text-error-tertiary:     var(--color-error-700);
+
+  /* Border */
+  --color-border-primary:          var(--color-gray-300);
+  --color-border-secondary:        var(--color-gray-200);
+  --color-border-tertiary:         var(--color-gray-100);
+  --color-border-disabled:         var(--color-gray-300);
+  --color-border-disabled-subtle:  var(--color-gray-200);
+  --color-border-brand:            var(--color-brand-300);
+  --color-border-brand-solid:      var(--color-brand-500);
+  --color-border-error:            var(--color-error-300);
+  --color-border-error-solid:      var(--color-error-600);
+
+  /* Foreground (icons / non-text) */
+  --color-fg-primary:              var(--color-gray-900);
+  --color-fg-secondary:            var(--color-gray-700);
+  --color-fg-secondary-hover:      var(--color-gray-800);
+  --color-fg-tertiary:             var(--color-gray-600);
+  --color-fg-tertiary-hover:       var(--color-gray-700);
+  --color-fg-quaternary:           var(--color-gray-500);
+  --color-fg-quaternary-hover:     var(--color-gray-600);
+  --color-fg-quinary:              var(--color-gray-400);
+  --color-fg-quinary-hover:        var(--color-gray-500);
+  --color-fg-senary:               var(--color-gray-300);
+  --color-fg-white:                var(--color-white);
+  --color-fg-disabled:             var(--color-gray-400);
+  --color-fg-disabled-subtle:      var(--color-gray-300);
+  --color-fg-brand-primary:        var(--color-brand-500);
+  --color-fg-brand-secondary:      var(--color-brand-300);
+  --color-fg-brand-solid:          var(--color-brand-700);
+  --color-fg-error-primary:        var(--color-error-600);
+  --color-fg-error-solid:          var(--color-error-700);
+  --color-fg-error-secondary:      var(--color-error-500);
+  --color-fg-warning-primary:      var(--color-warning-600);
+  --color-fg-warning-secondary:    var(--color-warning-500);
+  --color-fg-success-primary:      var(--color-success-600);
+  --color-fg-success-secondary:    var(--color-success-500);
+
+  /* Background */
+  --color-bg-primary:              var(--color-white);
+  --color-bg-primary-hover:        var(--color-gray-50);
+  --color-bg-primary-solid:        var(--color-gray-950);
+  --color-bg-secondary:            var(--color-gray-50);
+  --color-bg-secondary-hover:      var(--color-gray-100);
+  --color-bg-secondary-subtle:     var(--color-gray-25);
+  --color-bg-secondary-solid:      var(--color-gray-600);
+  --color-bg-tertiary:             var(--color-gray-100);
+  --color-bg-quaternary:           var(--color-gray-200);
+  --color-bg-active:               var(--color-gray-50);
+  --color-bg-disabled:             var(--color-gray-100);
+  --color-bg-disabled-subtle:      var(--color-gray-50);
+  --color-bg-overlay:              var(--color-gray-950);
+  --color-bg-brand-primary:        var(--color-brand-50);
+  --color-bg-brand-secondary:      var(--color-brand-100);
+  /* brand-500/600 fail WCAG AA 4.5:1 for white button-label text (3.44:1 / 4.07:1) — bumped to
+     brand-700/800 (6.08:1 / comfortably higher) to fix the primary Button variant. */
+  --color-bg-brand-solid:          var(--color-brand-700);
+  --color-bg-brand-solid-hover:    var(--color-brand-800);
+  /* Non-text solid fills (e.g. Checkbox's checked box, which holds only a check icon) need just
+     3:1 (WCAG 1.4.11), which brand-500 already met — kept separate from bg-brand-solid above so
+     that token's bump for button TEXT contrast doesn't silently reskin every icon-only control. */
+  --color-bg-brand-solid-icon:     var(--color-brand-500);
+  --color-bg-error-primary:        var(--color-error-50);
+  --color-bg-error-secondary:      var(--color-error-100);
+  --color-bg-error-solid:          var(--color-error-600);
+  --color-bg-error-solid-hover:    var(--color-error-700);
+  --color-bg-warning-primary:      var(--color-warning-50);
+  --color-bg-warning-secondary:    var(--color-warning-100);
+  --color-bg-warning-solid:        var(--color-warning-600);
+  --color-bg-success-primary:      var(--color-success-50);
+  --color-bg-success-secondary:    var(--color-success-100);
+  --color-bg-success-solid:        var(--color-success-600);
+}
+
+/* ── Semantic utility classes ───────────────────────────────────────────────
+   Clean, Figma-named utilities over the semantic tokens above. Lets components
+   write `bg-primary` / `text-secondary` / `border-primary` instead of the verbose
+   `bg-[var(--color-bg-primary)]`. Names mirror Figma 1:1. `text-white` is omitted
+   on purpose — Tailwind's built-in already covers it with the same value.
+   Tailwind tree-shakes these: only utilities actually used in markup are emitted. */
+
+/* text — sets `color` */
+@utility text-primary { color: var(--color-text-primary); }
+@utility text-primary-on-brand { color: var(--color-text-primary-on-brand); }
+@utility text-secondary { color: var(--color-text-secondary); }
+@utility text-secondary-hover { color: var(--color-text-secondary-hover); }
+@utility text-tertiary { color: var(--color-text-tertiary); }
+@utility text-tertiary-hover { color: var(--color-text-tertiary-hover); }
+@utility text-quaternary { color: var(--color-text-quaternary); }
+@utility text-disabled { color: var(--color-text-disabled); }
+@utility text-placeholder { color: var(--color-text-placeholder); }
+@utility text-placeholder-subtle { color: var(--color-text-placeholder-subtle); }
+@utility text-brand-primary { color: var(--color-text-brand-primary); }
+@utility text-brand-tertiary { color: var(--color-text-brand-tertiary); }
+@utility text-brand-links { color: var(--color-text-brand-links); }
+@utility text-error-primary { color: var(--color-text-error-primary); }
+@utility text-error-tertiary { color: var(--color-text-error-tertiary); }
+@utility text-error-hover { color: var(--color-text-error-hover); }
+@utility text-warning-primary { color: var(--color-text-warning-primary); }
+@utility text-warning-tertiary { color: var(--color-text-warning-tertiary); }
+@utility text-success-primary { color: var(--color-text-success-primary); }
+@utility text-success-tertiary { color: var(--color-text-success-tertiary); }
+
+/* border — sets `border-color` */
+@utility border-primary { border-color: var(--color-border-primary); }
+@utility border-secondary { border-color: var(--color-border-secondary); }
+@utility border-tertiary { border-color: var(--color-border-tertiary); }
+@utility border-disabled { border-color: var(--color-border-disabled); }
+@utility border-disabled-subtle { border-color: var(--color-border-disabled-subtle); }
+@utility border-brand { border-color: var(--color-border-brand); }
+@utility border-brand-solid { border-color: var(--color-border-brand-solid); }
+@utility border-t-brand-solid { border-top-color: var(--color-border-brand-solid); }
+@utility border-error { border-color: var(--color-border-error); }
+@utility border-error-solid { border-color: var(--color-border-error-solid); }
+
+/* fg — sets `color` (icons via currentColor) */
+@utility fg-primary { color: var(--color-fg-primary); }
+@utility fg-secondary { color: var(--color-fg-secondary); }
+@utility fg-secondary-hover { color: var(--color-fg-secondary-hover); }
+@utility fg-tertiary { color: var(--color-fg-tertiary); }
+@utility fg-tertiary-hover { color: var(--color-fg-tertiary-hover); }
+@utility fg-quaternary { color: var(--color-fg-quaternary); }
+@utility fg-quaternary-hover { color: var(--color-fg-quaternary-hover); }
+@utility fg-quinary { color: var(--color-fg-quinary); }
+@utility fg-quinary-hover { color: var(--color-fg-quinary-hover); }
+@utility fg-senary { color: var(--color-fg-senary); }
+@utility fg-white { color: var(--color-fg-white); }
+@utility fg-disabled { color: var(--color-fg-disabled); }
+@utility fg-disabled-subtle { color: var(--color-fg-disabled-subtle); }
+@utility fg-brand-primary { color: var(--color-fg-brand-primary); }
+@utility fg-brand-secondary { color: var(--color-fg-brand-secondary); }
+@utility fg-brand-solid { color: var(--color-fg-brand-solid); }
+@utility fg-error-primary { color: var(--color-fg-error-primary); }
+@utility fg-error-solid { color: var(--color-fg-error-solid); }
+@utility fg-error-secondary { color: var(--color-fg-error-secondary); }
+@utility fg-warning-primary { color: var(--color-fg-warning-primary); }
+@utility fg-warning-secondary { color: var(--color-fg-warning-secondary); }
+@utility fg-success-primary { color: var(--color-fg-success-primary); }
+@utility fg-success-secondary { color: var(--color-fg-success-secondary); }
+
+/* bg — sets `background-color` */
+@utility bg-primary { background-color: var(--color-bg-primary); }
+@utility bg-primary-hover { background-color: var(--color-bg-primary-hover); }
+@utility bg-primary-solid { background-color: var(--color-bg-primary-solid); }
+@utility bg-secondary { background-color: var(--color-bg-secondary); }
+@utility bg-secondary-hover { background-color: var(--color-bg-secondary-hover); }
+@utility bg-secondary-subtle { background-color: var(--color-bg-secondary-subtle); }
+@utility bg-secondary-solid { background-color: var(--color-bg-secondary-solid); }
+@utility bg-tertiary { background-color: var(--color-bg-tertiary); }
+@utility bg-quaternary { background-color: var(--color-bg-quaternary); }
+@utility bg-active { background-color: var(--color-bg-active); }
+@utility bg-disabled { background-color: var(--color-bg-disabled); }
+@utility bg-disabled-subtle { background-color: var(--color-bg-disabled-subtle); }
+/* 70% opacity baked into the color itself, not the `opacity` CSS property — Dialog nests its
+   backdrop and card in one overlay element, and `opacity` would fade the card along with it.
+   Plain rgba (matches --color-bg-overlay #131316) rather than color-mix(…, transparent), which some
+   Chromium builds resolve in getComputedStyle but paint far too light — reading as "no overlay". */
+@utility bg-overlay { background-color: rgb(19 19 22 / 0.7); }
+@utility bg-brand-primary { background-color: var(--color-bg-brand-primary); }
+@utility bg-brand-secondary { background-color: var(--color-bg-brand-secondary); }
+@utility bg-brand-solid { background-color: var(--color-bg-brand-solid); }
+@utility bg-brand-solid-hover { background-color: var(--color-bg-brand-solid-hover); }
+@utility bg-brand-solid-icon { background-color: var(--color-bg-brand-solid-icon); }
+@utility bg-error-primary { background-color: var(--color-bg-error-primary); }
+@utility bg-error-secondary { background-color: var(--color-bg-error-secondary); }
+@utility bg-error-solid { background-color: var(--color-bg-error-solid); }
+@utility bg-error-solid-hover { background-color: var(--color-bg-error-solid-hover); }
+@utility bg-warning-primary { background-color: var(--color-bg-warning-primary); }
+@utility bg-warning-secondary { background-color: var(--color-bg-warning-secondary); }
+@utility bg-warning-solid { background-color: var(--color-bg-warning-solid); }
+@utility bg-success-primary { background-color: var(--color-bg-success-primary); }
+@utility bg-success-secondary { background-color: var(--color-bg-success-secondary); }
+@utility bg-success-solid { background-color: var(--color-bg-success-solid); }
+
+/* bg — file-type badge hues (see the primitive block above for why these skip the semantic layer) */
+@utility bg-purple-solid      { background-color: var(--color-purple-600); }
+@utility bg-blue-solid        { background-color: var(--color-blue-600); }
+@utility bg-slate-solid       { background-color: var(--color-slate-600); }
+@utility bg-slate-solid-dark  { background-color: var(--color-slate-700); }
+@utility bg-orange-solid      { background-color: var(--color-orange-600); }
+@utility bg-orange-solid-dark { background-color: var(--color-orange-dark-600); }
+@utility bg-fuchsia-solid     { background-color: var(--color-fuchsia-600); }
+@utility bg-violet-solid      { background-color: var(--color-violet-600); }
+@utility bg-pink-solid        { background-color: var(--color-pink-600); }
+@utility bg-indigo-solid      { background-color: var(--color-indigo-600); }
+
+/* focus rings — see --shadow-ring-* above for the Figma effect values */
+@utility ring-brand { box-shadow: var(--shadow-ring-brand); }
+/* Full focus treatment for borderless controls (links, TOC items): the border-brand edge + the
+   ring-brand halo the Figma focus spec (27-5041) shows, rendered as a box-shadow so it adds no
+   layout box and doesn't break adjacent elements. */
+@utility ring-brand-focus { box-shadow: 0 0 0 1px var(--color-border-brand), var(--shadow-ring-brand); }
+@utility ring-error { box-shadow: var(--shadow-ring-error); }
+@utility ring-gray { box-shadow: var(--shadow-ring-gray); }
+@utility ring-brand-inset { box-shadow: var(--shadow-ring-brand-inset); }
+@utility ring-brand-inset-halo { box-shadow: var(--shadow-ring-brand-inset-halo); }
+
+/* Thin scrollbar matching the Figma "_Scroll bar" (49:5805): a fully-rounded bg-quaternary thumb
+   on a transparent track, replacing the chunky native bar. Shared so every scroll region — the
+   frequently-used row, the connections table, the drawer — gets the same treatment. */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bg-quaternary) transparent;
+  &::-webkit-scrollbar { width: 8px; height: 8px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-bg-quaternary);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}
+
+/* grid-template-columns has no Tailwind scale namespace to extend, so this stays a custom
+   @utility — but reads the --width-tile-* tokens above via var() instead of re-typing the
+   number, so the card width and the grid's own minmax() track can't drift apart. */
+@utility grid-cols-tile-md { grid-template-columns: repeat(auto-fill, minmax(var(--width-tile-md), 1fr)); }
+@utility grid-cols-tile-lg { grid-template-columns: repeat(auto-fill, minmax(var(--width-tile-lg), 1fr)); }
+@utility grid-cols-tile-xl { grid-template-columns: repeat(auto-fill, minmax(var(--width-tile-xl), 1fr)); }
+
+/* Reduced motion — respect OS preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
